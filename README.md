@@ -1,2 +1,2 @@
-# supertitles
+# SuperTitles
 A better supertitling / surtitling program
