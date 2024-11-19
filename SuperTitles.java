@@ -243,24 +243,23 @@ class ControlWindow extends JFrame {
 
     public ControlWindow(ProjectorWindow projectorWindow) {
         this.projectorWindow = projectorWindow;
-
+    
         // Set up the JFrame
         setTitle("Control Window");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(900, 700);
         getContentPane().setBackground(new Color(15, 15, 15));
         setLayout(new BorderLayout());
-
+    
         // Add file chooser button
         JPanel topPanel = new JPanel();
         topPanel.setBackground(new Color(15, 15, 15));
         JButton chooseFileButton = new JButton("Choose File");
         chooseFileButton.addActionListener(e -> {
             chooseFile();
-            requestFocusInWindow();
         });
         topPanel.add(chooseFileButton);
-
+    
         // Add control buttons
         JButton nextButton = new JButton("Next");
         nextButton.addActionListener(e -> {
@@ -269,7 +268,7 @@ class ControlWindow extends JFrame {
             requestFocusInWindow();
         });
         topPanel.add(nextButton);
-
+    
         JButton previousButton = new JButton("Previous");
         previousButton.addActionListener(e -> {
             projectorWindow.previousLine();
@@ -277,9 +276,9 @@ class ControlWindow extends JFrame {
             requestFocusInWindow();
         });
         topPanel.add(previousButton);
-
+    
         add(topPanel, BorderLayout.NORTH);
-
+    
         // Add preview area
         previewArea = new JTextArea();
         previewArea.setEditable(false);
@@ -288,11 +287,11 @@ class ControlWindow extends JFrame {
         previewArea.setForeground(Color.WHITE);
         previewArea.setFont(new Font("Monospaced", Font.PLAIN, 14));
         previewArea.setBorder(BorderFactory.createEmptyBorder());
-
+    
         JScrollPane scrollPane = new JScrollPane(previewArea);
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
         add(scrollPane, BorderLayout.CENTER);
-
+    
         // Add key listener to the control window
         addKeyListener(new KeyAdapter() {
             @Override
@@ -301,13 +300,22 @@ class ControlWindow extends JFrame {
                 updatePreview();
             }
         });
-
+    
+        // Add window focus listener to bring the window to the front
+        addWindowFocusListener(new WindowAdapter() {
+            @Override
+            public void windowGainedFocus(WindowEvent e) {
+                toFront();
+                requestFocusInWindow();
+            }
+        });
+    
         setFocusable(true);
         requestFocusInWindow();
-
+    
         setVisible(true);
     }
-
+    
     private void chooseFile() {
         FileDialog fileDialog = new FileDialog(this, "Choose a file", FileDialog.LOAD);
         fileDialog.setDirectory(lastUsedPath);
@@ -317,16 +325,19 @@ class ControlWindow extends JFrame {
         if (directory != null && file != null) {
             String filePath = directory + file;
             projectorWindow.loadLines(filePath);
-
+    
             // Save the last used path
             lastUsedPath = directory;
             Preferences prefs = Preferences.userNodeForPackage(ControlWindow.class);
             prefs.put("lastUsedPath", lastUsedPath);
-
+    
             updatePreview();
         }
+    
+        // Request focus for the ControlWindow
+        toFront();
+        requestFocusInWindow();
     }
-
     private void updatePreview() {
         List<String> lines = projectorWindow.getLines();
         int currentIndex = projectorWindow.getCurrentIndex();
