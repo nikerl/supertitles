@@ -1,5 +1,6 @@
 package src;
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
@@ -49,6 +50,17 @@ class ControlWindow extends JFrame {
             requestFocusInWindow();
         });
         topPanel.add(previousButton);
+
+        // Add font selection dropdown
+        String[] fonts = {"Arial", "Monospaced", "Serif"};
+        JComboBox<String> fontComboBox = new JComboBox<>(fonts);
+        fontComboBox.setSelectedItem("Serif");
+        fontComboBox.addActionListener(e -> {
+            String selectedFont = (String) fontComboBox.getSelectedItem();
+            projectorWindow.setFont(new Font(selectedFont, Font.PLAIN, projectorWindow.getFontSize()));
+            requestFocusInWindow();
+        });
+        topPanel.add(fontComboBox);
     
         add(topPanel, BorderLayout.NORTH);
     
@@ -96,7 +108,10 @@ class ControlWindow extends JFrame {
         JFileChooser fileChooser = new JFileChooser(lastUsedPath);
         fileChooser.setDialogTitle("Choose a file");
         fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-    
+        
+        // Set file filter to only show text files
+        fileChooser.setFileFilter(new FileNameExtensionFilter("Text Files", "txt"));
+
         // Show the file chooser dialog
         int returnValue = fileChooser.showOpenDialog(this);
         if (returnValue == JFileChooser.APPROVE_OPTION) {

@@ -228,4 +228,12 @@ class ProjectorWindow extends JFrame {
     public int getCurrentIndex() {
         return currentIndex;
     }
+
+    public int getFontSize() {
+        return fontSize;
+    }
+
+    public void setFont(Font font) {
+        title.setFont(font);
+    }
 }
