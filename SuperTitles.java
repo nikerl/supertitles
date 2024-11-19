@@ -34,7 +34,7 @@ class ProjectorWindow extends JFrame {
         // Set up the JFrame
         setTitle("SuperTitles");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(1200, 720);
+        setUndecorated(true); // Remove window decorations
         getContentPane().setBackground(Color.BLACK);
         setLayout(null); // Use null layout for absolute positioning
     
@@ -49,6 +49,21 @@ class ProjectorWindow extends JFrame {
         // Add key listener for navigation and font changes
         keylistener();
     
+        // Set the location of the window on the second display if available
+        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        GraphicsDevice[] gs = ge.getScreenDevices();
+        if (gs.length > 1) {
+            // More than one screen, set the location to the second screen
+            GraphicsDevice secondScreen = gs[1];
+            secondScreen.setFullScreenWindow(this);
+        } else {
+            // Only one screen, set to fullscreen on the primary screen
+            GraphicsDevice primaryScreen = ge.getDefaultScreenDevice();
+            primaryScreen.setFullScreenWindow(this);
+        }
+    
+        updateTitle();
+        
         setVisible(true);
     }
 
