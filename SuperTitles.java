@@ -44,43 +44,40 @@ class SuperTitles extends JFrame {
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.isControlDown()) {
-                    switch (e.getKeyCode()) {
-                        case KeyEvent.VK_UP:
-                            coords.y -= TRANSLATION_INCREMENT;
-                            break;
-                        case KeyEvent.VK_DOWN:
-                            coords.y += TRANSLATION_INCREMENT;
-                            break;
-                        case KeyEvent.VK_LEFT:
-                            coords.x -= TRANSLATION_INCREMENT;
-                            break;
-                        case KeyEvent.VK_RIGHT:
-                            coords.x += TRANSLATION_INCREMENT;
-                            break;
-                        case KeyEvent.VK_PLUS:
-                            fontSize += FONT_SIZE_INCREMENT;
-                            System.out.println("fontSize = " + fontSize);
-                            System.out.println("y = " + coords.y);
-                            break;
-                        case KeyEvent.VK_MINUS:
-                            fontSize -= FONT_SIZE_INCREMENT;
-                            System.out.println("fontSize = " + fontSize);
-                            System.out.println("y = " + coords.y);
-                            break;
-                        default:
-                            break;
-                    }
-                    updateTitle();
-                } else if (e.isShiftDown()) {
-                    switch (e.getKeyCode()) {
-                        case KeyEvent.VK_LEFT:
-                            coords.rotation -= ROTATION_INCREMENT;
-                            break;
-                        case KeyEvent.VK_RIGHT:
-                            coords.rotation += ROTATION_INCREMENT;
-                            break;
-                        default:
-                            break;
+                    if (e.isShiftDown()) {
+                        switch (e.getKeyCode()) {
+                            case KeyEvent.VK_LEFT:
+                                coords.rotation -= ROTATION_INCREMENT;
+                                break;
+                            case KeyEvent.VK_RIGHT:
+                                coords.rotation += ROTATION_INCREMENT;
+                                break;
+                            default:
+                                break;
+                        }
+                    } else {
+                        switch (e.getKeyCode()) {
+                            case KeyEvent.VK_UP:
+                                coords.y -= TRANSLATION_INCREMENT;
+                                break;
+                            case KeyEvent.VK_DOWN:
+                                coords.y += TRANSLATION_INCREMENT;
+                                break;
+                            case KeyEvent.VK_LEFT:
+                                coords.x -= TRANSLATION_INCREMENT;
+                                break;
+                            case KeyEvent.VK_RIGHT:
+                                coords.x += TRANSLATION_INCREMENT;
+                                break;
+                            case KeyEvent.VK_PLUS:
+                                fontSize += FONT_SIZE_INCREMENT;
+                                break;
+                            case KeyEvent.VK_MINUS:
+                                fontSize -= FONT_SIZE_INCREMENT;
+                                break;
+                            default:
+                                break;
+                        }
                     }
                     updateTitle();
                 } else {
@@ -108,8 +105,8 @@ class SuperTitles extends JFrame {
     }
 
     private void loadLines(String filePath) {
-        lines.add("");
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            lines.add("");
             String line;
             while ((line = br.readLine()) != null) {
                 lines.add(line);
@@ -125,25 +122,27 @@ class SuperTitles extends JFrame {
             title.setText("No lines to display");
         } else {
             title.setText(lines.get(currentIndex));
-            title.setFont(new Font("Serif", Font.PLAIN, fontSize));
-            title.setForeground(Color.WHITE);
-            title.setHorizontalAlignment(JLabel.CENTER); // Center align the text
-            title.setVerticalAlignment(JLabel.CENTER);
-    
-            // Set the size of the JLabel to be larger to accommodate rotation
-            int width = getWidth();
-            int height = title.getPreferredSize().height * 4; // Increase height to accommodate rotation
-            title.setSize(width, height);
-    
-            // Adjust the location based on the coords
-            title.setLocation(coords.x, coords.y);
-    
-            // Set the rotation
-            title.setRotation(coords.rotation);
-    
-            title.repaint();
         }
+
+        title.setFont(new Font("Serif", Font.PLAIN, fontSize));
+        title.setForeground(Color.WHITE);
+        title.setHorizontalAlignment(JLabel.CENTER); // Center align the text
+        title.setVerticalAlignment(JLabel.CENTER);
+
+        // Set the size of the JLabel to be larger to accommodate rotation
+        int width = getWidth();
+        int height = title.getPreferredSize().height * 4; // Increase height to accommodate rotation
+        title.setSize(width, height);
+
+        // Adjust the location based on the coords
+        title.setLocation(coords.x, coords.y);
+
+        // Set the rotation
+        title.setRotation(coords.rotation);
+
+        title.repaint();
     }
+
 
     public static void main(String[] args) {
         new SuperTitles();
