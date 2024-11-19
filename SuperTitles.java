@@ -22,7 +22,7 @@ class SuperTitles extends JFrame {
         coords = new Coords();
     
         // Load lines from the text file
-        loadLines("test_texts/text.txt");
+        loadLines("test_texts/kärleksduett.txt");
     
         // Set up the JFrame
         setTitle("SuperTitles");
@@ -121,7 +121,9 @@ class SuperTitles extends JFrame {
         if (lines.isEmpty()) {
             title.setText("No lines to display");
         } else {
-            title.setText(lines.get(currentIndex));
+            //title.setText(lines.get(currentIndex));
+            String currentLine = lines.get(currentIndex);
+            title.setText("<html><div style='text-align: center'>" + currentLine + "</div></html>");
         }
 
         title.setFont(new Font("Serif", Font.PLAIN, fontSize));
@@ -131,7 +133,8 @@ class SuperTitles extends JFrame {
 
         // Set the size of the JLabel to be larger to accommodate rotation
         int width = getWidth();
-        int height = title.getPreferredSize().height * 4; // Increase height to accommodate rotation
+        //int height = title.getPreferredSize().height * 4; // Increase height to accommodate rotation
+        int height = 400;
         title.setSize(width, height);
 
         // Adjust the location based on the coords
