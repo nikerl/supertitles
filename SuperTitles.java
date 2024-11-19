@@ -4,8 +4,9 @@ import java.awt.event.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.prefs.Preferences;
 
-class SuperTitles extends JFrame {
+class ProjectorWindow extends JFrame {
     private RotatableLabel title;
     private List<String> lines;
     private int currentIndex;
@@ -15,14 +16,20 @@ class SuperTitles extends JFrame {
     private static final double ROTATION_INCREMENT = 0.5;
     private static final int FONT_SIZE_INCREMENT = 2;
 
-    public SuperTitles() {
+    public static enum Direction {
+        TRANSLATE_UP,
+        TRANSLATE_DOWN,
+        TRANSLATE_LEFT,
+        TRANSLATE_RIGHT,
+        ROTATE_LEFT,
+        ROTATE_RIGHT
+    }
+
+    public ProjectorWindow(String filePath) {
         lines = new ArrayList<>();
         currentIndex = 0;
         fontSize = 28;
         coords = new Coords();
-    
-        // Load lines from the text file
-        loadLines("test_texts/kärleksduett.txt");
     
         // Set up the JFrame
         setTitle("SuperTitles");
@@ -34,96 +41,41 @@ class SuperTitles extends JFrame {
         // Create and configure the RotatableLabel
         title = new RotatableLabel("", JLabel.CENTER);
         title.setForeground(Color.WHITE);
-        updateTitle();
-    
-        // Add the RotatableLabel to the frame
         add(title);
     
+        // Load lines from the text file
+        loadLines(filePath);
+    
         // Add key listener for navigation and font changes
-        addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent e) {
-                if (e.isControlDown()) {
-                    if (e.isShiftDown()) {
-                        switch (e.getKeyCode()) {
-                            case KeyEvent.VK_LEFT:
-                                coords.rotation -= ROTATION_INCREMENT;
-                                break;
-                            case KeyEvent.VK_RIGHT:
-                                coords.rotation += ROTATION_INCREMENT;
-                                break;
-                            default:
-                                break;
-                        }
-                    } else {
-                        switch (e.getKeyCode()) {
-                            case KeyEvent.VK_UP:
-                                coords.y -= TRANSLATION_INCREMENT;
-                                break;
-                            case KeyEvent.VK_DOWN:
-                                coords.y += TRANSLATION_INCREMENT;
-                                break;
-                            case KeyEvent.VK_LEFT:
-                                coords.x -= TRANSLATION_INCREMENT;
-                                break;
-                            case KeyEvent.VK_RIGHT:
-                                coords.x += TRANSLATION_INCREMENT;
-                                break;
-                            case KeyEvent.VK_PLUS:
-                                fontSize += FONT_SIZE_INCREMENT;
-                                break;
-                            case KeyEvent.VK_MINUS:
-                                fontSize -= FONT_SIZE_INCREMENT;
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                    updateTitle();
-                } else {
-                    switch (e.getKeyCode()) {
-                        case KeyEvent.VK_UP:
-                            if (currentIndex > 0) {
-                                currentIndex--;
-                                updateTitle();
-                            }
-                            break;
-                        case KeyEvent.VK_DOWN:
-                            if (currentIndex < lines.size() - 1) {
-                                currentIndex++;
-                                updateTitle();
-                            }
-                            break;
-                        default:
-                            break;
-                    }
-                }
-            }
-        });
+        keylistener();
     
         setVisible(true);
     }
 
-    private void loadLines(String filePath) {
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-            lines.add("");
-            String line;
-            while ((line = br.readLine()) != null) {
-                lines.add(line);
+    public void loadLines(String filePath) {
+        lines.clear();
+        if (filePath != null) {
+            try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
                 lines.add("");
+                String line;
+                while ((line = br.readLine()) != null) {
+                    lines.add(line);
+                    lines.add("");
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+            currentIndex = 0;
         }
+        updateTitle();
     }
 
     private void updateTitle() {
         if (lines.isEmpty()) {
-            title.setText("No lines to display");
+            title.setText("Choose a file to display");
         } else {
-            //title.setText(lines.get(currentIndex));
             String currentLine = lines.get(currentIndex);
-            title.setText("<html><div style='text-align: center'>" + currentLine + "</div></html>");
+            title.setText("<html><div style='text-align: center; line-height: 1.5;'>" + currentLine + "</div></html>");
         }
 
         title.setFont(new Font("Serif", Font.PLAIN, fontSize));
@@ -133,8 +85,7 @@ class SuperTitles extends JFrame {
 
         // Set the size of the JLabel to be larger to accommodate rotation
         int width = getWidth();
-        //int height = title.getPreferredSize().height * 4; // Increase height to accommodate rotation
-        int height = 400;
+        int height = 400; // Increase height to accommodate rotation
         title.setSize(width, height);
 
         // Adjust the location based on the coords
@@ -146,12 +97,190 @@ class SuperTitles extends JFrame {
         title.repaint();
     }
 
+    public void nextLine() {
+        if (currentIndex < lines.size() - 1) {
+            currentIndex++;
+            updateTitle();
+        }
+    }
+
+    public void previousLine() {
+        if (currentIndex > 0) {
+            currentIndex--;
+            updateTitle();
+        }
+    }
+
+    public void move_textbox(Direction direction) {
+        switch (direction) {
+            case TRANSLATE_UP:
+                coords.y -= TRANSLATION_INCREMENT;
+                break;
+            case TRANSLATE_DOWN:
+                coords.y += TRANSLATION_INCREMENT;
+                break;
+            case TRANSLATE_LEFT:
+                coords.x -= TRANSLATION_INCREMENT;
+                break;
+            case TRANSLATE_RIGHT:
+                coords.x += TRANSLATION_INCREMENT;
+                break;
+            case ROTATE_LEFT:
+                coords.rotation -= ROTATION_INCREMENT;
+                break;
+            case ROTATE_RIGHT:
+                coords.rotation += ROTATION_INCREMENT;
+                break;
+            default:
+                break;
+        }
+        updateTitle();
+    }
+
+    public void increaseFontSize() {
+        fontSize += FONT_SIZE_INCREMENT;
+        updateTitle();
+    }
+
+    public void decreaseFontSize() {
+        fontSize -= FONT_SIZE_INCREMENT;
+        updateTitle();
+    }
+
+    public void keylistener() {
+        // Add key listener for navigation and font changes
+        addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.isControlDown()) {
+                    if (e.isShiftDown()) {
+                        switch (e.getKeyCode()) {
+                            case KeyEvent.VK_LEFT:
+                                move_textbox(Direction.ROTATE_LEFT);
+                                break;
+                            case KeyEvent.VK_RIGHT:
+                                move_textbox(Direction.ROTATE_RIGHT);
+                                break;
+                            default:
+                                break;
+                        }
+                    } else {
+                        switch (e.getKeyCode()) {
+                            case KeyEvent.VK_UP:
+                                move_textbox(Direction.TRANSLATE_UP);
+                                break;
+                            case KeyEvent.VK_DOWN:
+                                move_textbox(Direction.TRANSLATE_DOWN);
+                                break;
+                            case KeyEvent.VK_LEFT:
+                                move_textbox(Direction.TRANSLATE_LEFT);
+                                break;
+                            case KeyEvent.VK_RIGHT:
+                                move_textbox(Direction.TRANSLATE_RIGHT);
+                                break;
+                            case KeyEvent.VK_PLUS:
+                                increaseFontSize();
+                                break;
+                            case KeyEvent.VK_MINUS:
+                                decreaseFontSize();
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    updateTitle();
+                } else {
+                    switch (e.getKeyCode()) {
+                        case KeyEvent.VK_UP:
+                            previousLine();
+                            break;
+                        case KeyEvent.VK_DOWN:
+                            nextLine();
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+        });
+    }
 
     public static void main(String[] args) {
-        new SuperTitles();
+        SwingUtilities.invokeLater(() -> {
+            ProjectorWindow projectorWindow = new ProjectorWindow(null);
+            new ControlWindow(projectorWindow);
+        });
     }
 }
 
+class ControlWindow extends JFrame {
+    private ProjectorWindow projectorWindow;
+    private String lastUsedPath;
+
+    public ControlWindow(ProjectorWindow projectorWindow) {
+        this.projectorWindow = projectorWindow;
+
+        // Set up the JFrame
+        setTitle("Control Window");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(900, 600);
+        getContentPane().setBackground(new Color(15, 15, 15));
+        setLayout(new FlowLayout());
+
+        // Add file chooser button
+        JButton chooseFileButton = new JButton("Choose File");
+        chooseFileButton.addActionListener(e -> {
+            chooseFile();
+            requestFocusInWindow();
+        });
+        add(chooseFileButton);
+
+        // Add control buttons
+        JButton nextButton = new JButton("Next");
+        nextButton.addActionListener(e -> {
+            projectorWindow.nextLine();
+            requestFocusInWindow();
+        });
+        add(nextButton);
+
+        JButton previousButton = new JButton("Previous");
+        previousButton.addActionListener(e -> {
+            projectorWindow.previousLine();
+            requestFocusInWindow();
+        });
+        add(previousButton);
+
+        // Add key listener to the control window
+        addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                projectorWindow.dispatchEvent(e);
+            }
+        });
+
+        setFocusable(true);
+        requestFocusInWindow();
+
+        setVisible(true);
+    }
+
+    private void chooseFile() {
+        FileDialog fileDialog = new FileDialog(this, "Choose a file", FileDialog.LOAD);
+        fileDialog.setDirectory(lastUsedPath);
+        fileDialog.setVisible(true);
+        String directory = fileDialog.getDirectory();
+        String file = fileDialog.getFile();
+        if (directory != null && file != null) {
+            String filePath = directory + file;
+            projectorWindow.loadLines(filePath);
+
+            // Save the last used path
+            lastUsedPath = directory;
+            Preferences prefs = Preferences.userNodeForPackage(ControlWindow.class);
+            prefs.put("lastUsedPath", lastUsedPath);
+        }
+    }
+}
 
 class RotatableLabel extends JLabel {
     private double rotation;
@@ -186,7 +315,6 @@ class RotatableLabel extends JLabel {
         g2d.dispose();
     }
 }
-
 
 class Coords {
     int x;
