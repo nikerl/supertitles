@@ -18,7 +18,7 @@ class ControlWindow extends JFrame {
         this.projectorWindow = projectorWindow;
     
         // Set up the JFrame
-        setTitle("Control Window");
+        setTitle("SuperTitles");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(900, 700);
         getContentPane().setBackground(new Color(15, 15, 15));
