@@ -18,7 +18,7 @@ class SuperTitles extends JFrame {
     public SuperTitles() {
         lines = new ArrayList<>();
         currentIndex = 0;
-        fontSize = 24;
+        fontSize = 28;
         coords = new Coords();
     
         // Load lines from the text file
