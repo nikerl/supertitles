@@ -11,6 +11,8 @@ class ControlWindow extends JFrame {
     private ProjectorWindow projectorWindow;
     private String lastUsedPath;
     private JTextArea previewArea;
+    private final int PREVIEW_WINDOW_PAST = 10;
+    private final int PREVIEW_WINDOW_FUTURE = 20;
 
     public ControlWindow(ProjectorWindow projectorWindow) {
         this.projectorWindow = projectorWindow;
@@ -125,8 +127,8 @@ class ControlWindow extends JFrame {
         int currentIndex = projectorWindow.getCurrentIndex();
         StringBuilder previewText = new StringBuilder();
 
-        int start = Math.max(0, currentIndex - 10);
-        int end = Math.min(lines.size(), currentIndex + 20);
+        int start = Math.max(0, currentIndex - PREVIEW_WINDOW_PAST);
+        int end = Math.min(lines.size(), Math.max(currentIndex + PREVIEW_WINDOW_FUTURE, PREVIEW_WINDOW_FUTURE + PREVIEW_WINDOW_PAST));
 
         for (int i = start; i < end; i++) {
             String line = lines.get(i);
