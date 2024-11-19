@@ -229,6 +229,13 @@ class ProjectorWindow extends JFrame {
     }
 
     public static void main(String[] args) {
+        try {
+            // Set system Look and Feel
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         SwingUtilities.invokeLater(() -> {
             ProjectorWindow projectorWindow = new ProjectorWindow(null);
             new ControlWindow(projectorWindow);
@@ -312,32 +319,43 @@ class ControlWindow extends JFrame {
     
         setFocusable(true);
         requestFocusInWindow();
+
+        setAlwaysOnTop(true);
     
         setVisible(true);
     }
     
     private void chooseFile() {
-        FileDialog fileDialog = new FileDialog(this, "Choose a file", FileDialog.LOAD);
-        fileDialog.setDirectory(lastUsedPath);
-        fileDialog.setVisible(true);
-        String directory = fileDialog.getDirectory();
-        String file = fileDialog.getFile();
-        if (directory != null && file != null) {
-            String filePath = directory + file;
+        // Create the JFileChooser
+        JFileChooser fileChooser = new JFileChooser(lastUsedPath);
+        fileChooser.setDialogTitle("Choose a file");
+        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+    
+        // Show the file chooser dialog
+        int returnValue = fileChooser.showOpenDialog(this);
+        if (returnValue == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = fileChooser.getSelectedFile();
+            String filePath = selectedFile.getAbsolutePath();
             projectorWindow.loadLines(filePath);
     
             // Save the last used path
-            lastUsedPath = directory;
+            lastUsedPath = selectedFile.getParent();
             Preferences prefs = Preferences.userNodeForPackage(ControlWindow.class);
             prefs.put("lastUsedPath", lastUsedPath);
     
             updatePreview();
         }
     
+        // Re-enable always-on-top for the control window
+        setAlwaysOnTop(true);
+    
         // Request focus for the ControlWindow
-        toFront();
-        requestFocusInWindow();
+        SwingUtilities.invokeLater(() -> {
+            toFront();
+            requestFocusInWindow();
+        });
     }
+    
     private void updatePreview() {
         List<String> lines = projectorWindow.getLines();
         int currentIndex = projectorWindow.getCurrentIndex();
