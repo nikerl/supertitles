@@ -36,6 +36,7 @@ class ControlWindow extends JFrame {
     
         // Add control buttons
         JButton nextButton = new JButton("Next");
+        nextButton.setPreferredSize(new Dimension(100, nextButton.getPreferredSize().height));
         nextButton.addActionListener(e -> {
             projectorWindow.nextLine();
             updatePreview();
@@ -44,6 +45,7 @@ class ControlWindow extends JFrame {
         topPanel.add(nextButton);
     
         JButton previousButton = new JButton("Previous");
+        previousButton.setPreferredSize(new Dimension(100, previousButton.getPreferredSize().height));
         previousButton.addActionListener(e -> {
             projectorWindow.previousLine();
             updatePreview();
@@ -55,7 +57,7 @@ class ControlWindow extends JFrame {
         String[] fonts = {"Arial", "Monospaced", "Serif"};
         JComboBox<String> fontComboBox = new JComboBox<>(fonts);
         fontComboBox.setSelectedItem("Serif");
-        fontComboBox.setPreferredSize(new Dimension(75, fontComboBox.getPreferredSize().height));
+        fontComboBox.setPreferredSize(new Dimension(150, fontComboBox.getPreferredSize().height));
         fontComboBox.addActionListener(e -> {
             String selectedFont = (String) fontComboBox.getSelectedItem();
             projectorWindow.setFontTypeFace(selectedFont);
@@ -67,7 +69,7 @@ class ControlWindow extends JFrame {
         String[] fontStyles = {"Plain", "Bold", "Italic"};
         JComboBox<String> fontStyleComboBox = new JComboBox<>(fontStyles);
         fontStyleComboBox.setSelectedItem("Plain");
-        fontStyleComboBox.setPreferredSize(new Dimension(75, fontStyleComboBox.getPreferredSize().height));
+        fontStyleComboBox.setPreferredSize(new Dimension(150, fontStyleComboBox.getPreferredSize().height));
         fontStyleComboBox.addActionListener(e -> {
             String selectedFontStyle = (String) fontStyleComboBox.getSelectedItem();
             int fontStyle = 0;
