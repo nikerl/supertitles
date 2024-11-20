@@ -147,23 +147,15 @@ class ControlWindow extends JFrame {
 
         for (int i = start; i < end; i++) {
             String line = lines.get(i);
-            if (line.contains("<br>")) {
-                String[] splitLine = line.split("<br>");
-                
-                if (i == currentIndex) {
-                    for (int j = 0; j < splitLine.length; j++) {
-                        previewText.append(">> ").append(splitLine[j]).append("\n");
-                    }
-                } else {
-                    for (int j = 0; j < splitLine.length; j++) {
-                        previewText.append("   ").append(splitLine[j]).append("\n");
-                    }
+            String[] splitLine = line.split("<br>");
+            
+            if (i == currentIndex) {
+                for (int j = 0; j < splitLine.length; j++) {
+                    previewText.append(">> ").append(splitLine[j]).append("\n");
                 }
             } else {
-                if (i == currentIndex) {
-                    previewText.append(">> ").append(line).append("\n");
-                } else {
-                    previewText.append("   ").append(line).append("\n");
+                for (int j = 0; j < splitLine.length; j++) {
+                    previewText.append("   ").append(splitLine[j]).append("\n");
                 }
             }
         }
