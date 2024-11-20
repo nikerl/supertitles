@@ -3,6 +3,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -71,10 +72,10 @@ class ProjectorWindow extends JFrame {
     public void loadLines(String filePath) {
         lines.clear();
         if (filePath != null) {
-            try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(filePath), StandardCharsets.UTF_8))) {
                 lines.add("");
                 String line;
-                while ((line = br.readLine()) != null) {
+                while ((line = reader.readLine()) != null) {
                     lines.add(line);
                     lines.add("");
                 }
