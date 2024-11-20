@@ -55,12 +55,29 @@ class ControlWindow extends JFrame {
         String[] fonts = {"Arial", "Monospaced", "Serif"};
         JComboBox<String> fontComboBox = new JComboBox<>(fonts);
         fontComboBox.setSelectedItem("Serif");
+        fontComboBox.setPreferredSize(new Dimension(75, fontComboBox.getPreferredSize().height));
         fontComboBox.addActionListener(e -> {
             String selectedFont = (String) fontComboBox.getSelectedItem();
-            projectorWindow.setFont(new Font(selectedFont, Font.PLAIN, projectorWindow.getFontSize()));
+            projectorWindow.setFontTypeFace(selectedFont);
             requestFocusInWindow();
         });
         topPanel.add(fontComboBox);
+
+        // Add font style selection dropdown
+        String[] fontStyles = {"Plain", "Bold", "Italic"};
+        JComboBox<String> fontStyleComboBox = new JComboBox<>(fontStyles);
+        fontStyleComboBox.setSelectedItem("Plain");
+        fontStyleComboBox.setPreferredSize(new Dimension(75, fontStyleComboBox.getPreferredSize().height));
+        fontStyleComboBox.addActionListener(e -> {
+            String selectedFontStyle = (String) fontStyleComboBox.getSelectedItem();
+            int fontStyle = 0;
+            if (selectedFontStyle.equals("Plain")) fontStyle = Font.PLAIN;
+            if (selectedFontStyle.equals("Bold")) fontStyle = Font.BOLD;
+            if (selectedFontStyle.equals("Italic")) fontStyle = Font.ITALIC;
+            projectorWindow.setFontStyle(fontStyle);
+            requestFocusInWindow();
+        });
+        topPanel.add(fontStyleComboBox);
     
         add(topPanel, BorderLayout.NORTH);
     

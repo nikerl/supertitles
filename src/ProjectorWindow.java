@@ -12,8 +12,10 @@ class ProjectorWindow extends JFrame {
     private RotatableLabel title;
     private List<String> lines;
     private int currentIndex;
-    private int fontSize;
     private Coords coords;
+    private static String fontTypeFace;
+    private static int fontStyle;
+    private static int fontSize;
     private static final int TRANSLATION_INCREMENT = 5;
     private static final double ROTATION_INCREMENT = 0.5;
     private static final int FONT_SIZE_INCREMENT = 2;
@@ -30,6 +32,8 @@ class ProjectorWindow extends JFrame {
     public ProjectorWindow(String filePath) {
         lines = new ArrayList<>();
         currentIndex = 0;
+        fontTypeFace = "Serif";
+        fontStyle = Font.PLAIN;
         fontSize = 28;
         coords = new Coords();
     
@@ -95,7 +99,7 @@ class ProjectorWindow extends JFrame {
             title.setText("<html><div style='text-align: center; line-height: 1.5;'>" + currentLine + "</div></html>");
         }
 
-        title.setFont(new Font("Serif", Font.PLAIN, fontSize));
+        title.setFont(new Font(fontTypeFace, fontStyle, fontSize));
         title.setForeground(Color.WHITE);
         title.setHorizontalAlignment(JLabel.CENTER); // Center align the text
         title.setVerticalAlignment(JLabel.CENTER);
@@ -225,16 +229,15 @@ class ProjectorWindow extends JFrame {
     public List<String> getLines() {
         return lines;
     }
-
     public int getCurrentIndex() {
         return currentIndex;
     }
-
-    public int getFontSize() {
-        return fontSize;
+    public void setFontTypeFace(String fontTypeFace) {
+        ProjectorWindow.fontTypeFace = fontTypeFace;
+        updateTitle();
     }
-
-    public void setFont(Font font) {
-        title.setFont(font);
+    public void setFontStyle(int fontStyle) {
+        ProjectorWindow.fontStyle = fontStyle;
+        updateTitle();
     }
 }
