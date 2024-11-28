@@ -94,7 +94,7 @@ class ControlWindow extends JFrame {
 
         // Add help button
         JButton helpButton = new JButton("?");
-        helpButton.setPreferredSize(new Dimension(helpButton.getPreferredSize().height, helpButton.getPreferredSize().height));
+        helpButton.setPreferredSize(new Dimension(40, helpButton.getPreferredSize().height));
         helpButton.addActionListener(e -> {
             String message = "Keyboard Shortcuts:\n\n" +
                              "Next Line: Down arrow\n" +
@@ -201,7 +201,7 @@ class ControlWindow extends JFrame {
             String filePath = selectedFile.getAbsolutePath();
             projectorWindow.loadLines(filePath);
 
-            setTitle("SuperTitles  —  " + selectedFile.getName());
+            setTitle("SuperTitles  --  " + selectedFile.getName());
 
             // Save the last used path
             lastUsedPath = selectedFile.getParent();
