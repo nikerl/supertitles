@@ -12,8 +12,6 @@ class ControlWindow extends JFrame {
     private ProjectorWindow projectorWindow;
     private String lastUsedPath;
     private JTextPane previewArea;
-    private final int PREVIEW_WINDOW_PAST = 10;
-    private final int PREVIEW_WINDOW_FUTURE = 20;
 
     public ControlWindow(ProjectorWindow projectorWindow) {
         this.projectorWindow = projectorWindow;
@@ -118,10 +116,30 @@ class ControlWindow extends JFrame {
         previewArea.setForeground(Color.WHITE);
         previewArea.setFont(new Font("Monospaced", Font.PLAIN, 14));
         previewArea.setBorder(BorderFactory.createEmptyBorder());
-    
+
         JScrollPane scrollPane = new JScrollPane(previewArea);
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
-        add(scrollPane, BorderLayout.CENTER);
+        scrollPane.setPreferredSize(new Dimension(600, 0)); // Set preferred width
+        
+        // Center the scrollPane in a panel using GridBagLayout
+        JPanel centerPanel = new JPanel(new GridBagLayout());
+        centerPanel.setBackground(new Color(15, 15, 15));
+        
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.fill = GridBagConstraints.VERTICAL;
+        gbc.anchor = GridBagConstraints.CENTER;
+        gbc.weighty = 1.0;
+        
+        JPanel paddedPanel = new JPanel(new BorderLayout());
+        paddedPanel.setBackground(new Color(15, 15, 15));
+        paddedPanel.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0)); // Add padding
+        paddedPanel.add(scrollPane, BorderLayout.CENTER);
+        
+        centerPanel.add(paddedPanel, gbc);
+        
+        add(centerPanel, BorderLayout.CENTER);
     
         // Add key listener to the control window
         addKeyListener(new KeyAdapter() {
@@ -182,7 +200,9 @@ class ControlWindow extends JFrame {
             File selectedFile = fileChooser.getSelectedFile();
             String filePath = selectedFile.getAbsolutePath();
             projectorWindow.loadLines(filePath);
-    
+
+            setTitle("SuperTitles  —  " + selectedFile.getName());
+
             // Save the last used path
             lastUsedPath = selectedFile.getParent();
             Preferences prefs = Preferences.userNodeForPackage(ControlWindow.class);
@@ -206,26 +226,49 @@ class ControlWindow extends JFrame {
         int currentIndex = projectorWindow.getCurrentIndex();
         StringBuilder previewText = new StringBuilder();
     
-        int start = Math.max(0, currentIndex - PREVIEW_WINDOW_PAST);
-        int end = Math.min(lines.size(), Math.max(currentIndex + PREVIEW_WINDOW_FUTURE, PREVIEW_WINDOW_FUTURE + PREVIEW_WINDOW_PAST));
-    
+        // Build the preview text formatted as HTML
         previewText.append("<html><body style='font-family:monospace; color:white; background-color:#0F0F0F;'>");
     
-        for (int i = start; i < end; i++) {
+        for (int i = 0; i < lines.size(); i++) {
             String line = lines.get(i);
             String[] splitLine = line.split("<br>");
-            
-            for (int j = 0; j < splitLine.length; j++) {
+    
+            for (String split : splitLine) {
                 String backgroundColor = (i % 2 == 0) ? "#0F0F0F" : "#131313";
                 if (i == currentIndex) {
-                    previewText.append("<div data-line='").append(i).append("' style='background-color:#3E3E3E;'><b>").append(">>&nbsp;").append(splitLine[j]).append("</b></div>");
+                    previewText.append("<div data-line='").append(i)
+                        .append("' style='background-color:#3E3E3E;'><b>")
+                        .append(">>&nbsp;").append(split)
+                        .append("</b></div>");
                 } else {
-                    previewText.append("<div data-line='").append(i).append("' style='background-color:").append(backgroundColor).append(";'>").append("&nbsp;&nbsp;&nbsp;").append(splitLine[j]).append("</div>");
+                    previewText.append("<div data-line='").append(i)
+                        .append("' style='background-color:").append(backgroundColor).append(";'>")
+                        .append("&nbsp;&nbsp;&nbsp;").append(split)
+                        .append("</div>");
                 }
             }
         }
         previewText.append("</body></html>");
+    
+        JScrollPane scrollPane = (JScrollPane) SwingUtilities.getAncestorOfClass(JScrollPane.class, previewArea);
+    
+        // Update text
         previewArea.setText(previewText.toString());
+    
+        SwingUtilities.invokeLater(() -> {
+            try {
+                if (scrollPane != null) {
+                    int lineHeight = previewArea.getFontMetrics(previewArea.getFont()).getHeight();
+                    int visibleLines = scrollPane.getViewport().getHeight() / lineHeight;
+                    int targetLine = Math.max(0, currentIndex - (visibleLines / 3));
+                    int targetScroll = targetLine * lineHeight;
+                    
+                    scrollPane.getVerticalScrollBar().setValue(targetScroll);
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
     }
 
     private void jumpToLine(int line) {
