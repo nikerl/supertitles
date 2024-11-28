@@ -2,12 +2,19 @@
 A better supertitling / surtitling program
 
 ## Compile and run
-Compile the JAR file using this command:
+Compile the JAR file using this command, for Linux:
 ```bash
-javac src/* && 
-jar cvfm SuperTitles.jar MANIFEST.MF src/*.class && 
-rm src/*.class && 
+javac src/*
+jar cvfm SuperTitles.jar MANIFEST.MF src/*.class
+rm src/*.class
 chmod +x SuperTitles.jar
+```
+
+For Windows, run these commands in PowerShell:
+```powershell
+javac src/*
+jar cvfm SuperTitles.jar MANIFEST.MF src/*.class
+rm src/*.class
 ```
 
 Either run it by double clicking the executable or in the terminal using:
