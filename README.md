@@ -17,7 +17,7 @@ jar cvfm SuperTitles.jar MANIFEST.MF src/*.class
 rm src/*.class
 ```
 
-Either run it by double clicking the executable or in the terminal using:
+Run it by either double clicking the executable or in the terminal using this command:
 ```bash
 java -jar SuperTitles.jar
 ```
