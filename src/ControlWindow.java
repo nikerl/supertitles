@@ -10,7 +10,7 @@ import java.util.prefs.Preferences;
 
 class ControlWindow extends JFrame {
     private ProjectorWindow projectorWindow;
-    private String lastUsedPath;
+    private String lastUsedPath = System.getProperty("user.dir");
     private JTextArea previewArea;
     private final int PREVIEW_WINDOW_PAST = 10;
     private final int PREVIEW_WINDOW_FUTURE = 20;
@@ -80,6 +80,19 @@ class ControlWindow extends JFrame {
             requestFocusInWindow();
         });
         topPanel.add(fontStyleComboBox);
+
+        // Add help button
+        JButton helpButton = new JButton("?");
+        helpButton.setPreferredSize(new Dimension(helpButton.getPreferredSize().height, helpButton.getPreferredSize().height));
+        helpButton.addActionListener(e -> {
+            String message = "Keyboard Shortcuts:\n\n" +
+                             "Next Line: Down arrow\n" +
+                             "Previous Line: Up arrow\n" +
+                             "Move text: CTRL + Arrow keys\n" +
+                             "Rotate text: CTRL + SHIFT + Left/Right arrow";
+            JOptionPane.showMessageDialog(this, message, "Help", JOptionPane.INFORMATION_MESSAGE);
+        });
+        topPanel.add(helpButton);
     
         add(topPanel, BorderLayout.NORTH);
     
