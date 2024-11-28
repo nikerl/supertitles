@@ -91,7 +91,7 @@ class ProjectorWindow extends JFrame {
         updateTitle();
     }
 
-    private void updateTitle() {
+    public void updateTitle() {
         if (lines.isEmpty()) {
             title.setText("Choose a file to display");
         } else {
@@ -231,6 +231,9 @@ class ProjectorWindow extends JFrame {
     }
     public int getCurrentIndex() {
         return currentIndex;
+    }
+    public void setCurrentIndex(int newIndex) {
+        currentIndex = newIndex;
     }
     public void setFontTypeFace(String fontTypeFace) {
         ProjectorWindow.fontTypeFace = fontTypeFace;

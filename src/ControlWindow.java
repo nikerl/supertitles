@@ -1,12 +1,13 @@
 package src;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.text.BadLocationException;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.prefs.Preferences;
-
 
 class ControlWindow extends JFrame {
     private ProjectorWindow projectorWindow;
@@ -14,6 +15,7 @@ class ControlWindow extends JFrame {
     private JTextArea previewArea;
     private final int PREVIEW_WINDOW_PAST = 10;
     private final int PREVIEW_WINDOW_FUTURE = 20;
+    private List<Integer> previewToActualLineMap;
 
     public ControlWindow(ProjectorWindow projectorWindow) {
         this.projectorWindow = projectorWindow;
@@ -117,6 +119,20 @@ class ControlWindow extends JFrame {
                 updatePreview();
             }
         });
+
+        previewArea.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int offset = previewArea.viewToModel2D(e.getPoint());
+                try {
+                    int line = previewArea.getLineOfOffset(offset);
+                    jumpToLine(line);
+                } catch (BadLocationException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+
     
         // Add window focus listener to bring the window to the front
         addWindowFocusListener(new WindowAdapter() {
@@ -173,6 +189,7 @@ class ControlWindow extends JFrame {
         List<String> lines = projectorWindow.getLines();
         int currentIndex = projectorWindow.getCurrentIndex();
         StringBuilder previewText = new StringBuilder();
+        previewToActualLineMap = new ArrayList<>();
 
         int start = Math.max(0, currentIndex - PREVIEW_WINDOW_PAST);
         int end = Math.min(lines.size(), Math.max(currentIndex + PREVIEW_WINDOW_FUTURE, PREVIEW_WINDOW_FUTURE + PREVIEW_WINDOW_PAST));
@@ -181,16 +198,24 @@ class ControlWindow extends JFrame {
             String line = lines.get(i);
             String[] splitLine = line.split("<br>");
             
-            if (i == currentIndex) {
-                for (int j = 0; j < splitLine.length; j++) {
+            for (int j = 0; j < splitLine.length; j++) {
+                previewToActualLineMap.add(i);
+                if (i == currentIndex) {
                     previewText.append(">> ").append(splitLine[j]).append("\n");
-                }
-            } else {
-                for (int j = 0; j < splitLine.length; j++) {
+                } else {
                     previewText.append("   ").append(splitLine[j]).append("\n");
                 }
             }
         }
         previewArea.setText(previewText.toString());
+    }
+
+    private void jumpToLine(int line) {
+        if (line < previewToActualLineMap.size()) {
+            int actualLine = previewToActualLineMap.get(line);
+            projectorWindow.setCurrentIndex(actualLine);
+            updatePreview();
+            projectorWindow.updateTitle();
+        }
     }
 }
