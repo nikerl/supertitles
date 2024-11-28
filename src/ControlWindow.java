@@ -11,7 +11,7 @@ import java.util.prefs.Preferences;
 
 class ControlWindow extends JFrame {
     private ProjectorWindow projectorWindow;
-    private String lastUsedPath = System.getProperty("user.dir");
+    private String lastUsedPath;
     private JTextArea previewArea;
     private final int PREVIEW_WINDOW_PAST = 10;
     private final int PREVIEW_WINDOW_FUTURE = 20;
@@ -19,6 +19,19 @@ class ControlWindow extends JFrame {
 
     public ControlWindow(ProjectorWindow projectorWindow) {
         this.projectorWindow = projectorWindow;
+
+        // Determine the directory of the JAR file
+        try {
+            File jarFile = new File(ControlWindow.class.getProtectionDomain().getCodeSource().getLocation().toURI());
+            lastUsedPath = jarFile.getParent();
+
+            // Sets lastUsedPath to CWD instead of internal VSCode dir
+            if (lastUsedPath.contains(".config/Code")) {
+                lastUsedPath = System.getProperty("user.dir");
+            }
+        } catch (Exception e) {
+            lastUsedPath = System.getProperty("user.dir");
+        }
     
         // Set up the JFrame
         setTitle("SuperTitles");
