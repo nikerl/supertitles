@@ -1,21 +1,19 @@
 package src;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.text.BadLocationException;
+import javax.swing.text.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.prefs.Preferences;
 
 class ControlWindow extends JFrame {
     private ProjectorWindow projectorWindow;
     private String lastUsedPath;
-    private JTextArea previewArea;
+    private JTextPane previewArea;
     private final int PREVIEW_WINDOW_PAST = 10;
     private final int PREVIEW_WINDOW_FUTURE = 20;
-    private List<Integer> previewToActualLineMap;
 
     public ControlWindow(ProjectorWindow projectorWindow) {
         this.projectorWindow = projectorWindow;
@@ -112,7 +110,8 @@ class ControlWindow extends JFrame {
         add(topPanel, BorderLayout.NORTH);
     
         // Add preview area
-        previewArea = new JTextArea();
+        previewArea = new JTextPane();
+        previewArea.setContentType("text/html");
         previewArea.setEditable(false);
         previewArea.setFocusable(false);
         previewArea.setBackground(new Color(15, 15, 15));
@@ -138,14 +137,18 @@ class ControlWindow extends JFrame {
             public void mouseClicked(MouseEvent e) {
                 int offset = previewArea.viewToModel2D(e.getPoint());
                 try {
-                    int line = previewArea.getLineOfOffset(offset);
-                    jumpToLine(line);
-                } catch (BadLocationException ex) {
+                    Element element = previewArea.getStyledDocument().getCharacterElement(offset);
+                    AttributeSet as = element.getAttributes();
+                    String lineStr = (String) as.getAttribute("data-line");
+                    if (lineStr != null) {
+                        int actualLine = Integer.parseInt(lineStr);
+                        jumpToLine(actualLine);
+                    }
+                } catch (Exception ex) {
                     ex.printStackTrace();
                 }
             }
         });
-
     
         // Add window focus listener to bring the window to the front
         addWindowFocusListener(new WindowAdapter() {
@@ -202,33 +205,32 @@ class ControlWindow extends JFrame {
         List<String> lines = projectorWindow.getLines();
         int currentIndex = projectorWindow.getCurrentIndex();
         StringBuilder previewText = new StringBuilder();
-        previewToActualLineMap = new ArrayList<>();
-
+    
         int start = Math.max(0, currentIndex - PREVIEW_WINDOW_PAST);
         int end = Math.min(lines.size(), Math.max(currentIndex + PREVIEW_WINDOW_FUTURE, PREVIEW_WINDOW_FUTURE + PREVIEW_WINDOW_PAST));
-
+    
+        previewText.append("<html><body style='font-family:monospace; color:white; background-color:#0F0F0F;'>");
+    
         for (int i = start; i < end; i++) {
             String line = lines.get(i);
             String[] splitLine = line.split("<br>");
             
             for (int j = 0; j < splitLine.length; j++) {
-                previewToActualLineMap.add(i);
+                String backgroundColor = (i % 2 == 0) ? "#0F0F0F" : "#131313";
                 if (i == currentIndex) {
-                    previewText.append(">> ").append(splitLine[j]).append("\n");
+                    previewText.append("<div data-line='").append(i).append("' style='background-color:#3E3E3E;'><b>").append(">>&nbsp;").append(splitLine[j]).append("</b></div>");
                 } else {
-                    previewText.append("   ").append(splitLine[j]).append("\n");
+                    previewText.append("<div data-line='").append(i).append("' style='background-color:").append(backgroundColor).append(";'>").append("&nbsp;&nbsp;&nbsp;").append(splitLine[j]).append("</div>");
                 }
             }
         }
+        previewText.append("</body></html>");
         previewArea.setText(previewText.toString());
     }
 
     private void jumpToLine(int line) {
-        if (line < previewToActualLineMap.size()) {
-            int actualLine = previewToActualLineMap.get(line);
-            projectorWindow.setCurrentIndex(actualLine);
-            updatePreview();
-            projectorWindow.updateTitle();
-        }
+        projectorWindow.setCurrentIndex(line);
+        updatePreview();
+        projectorWindow.updateTitle();
     }
 }
