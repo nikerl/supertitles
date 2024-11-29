@@ -140,6 +140,8 @@ class ControlWindow extends JFrame {
         centerPanel.add(paddedPanel, gbc);
         
         add(centerPanel, BorderLayout.CENTER);
+
+        updatePreview();
     
         // Add key listener to the control window
         addKeyListener(new KeyAdapter() {
@@ -225,19 +227,29 @@ class ControlWindow extends JFrame {
         List<String> lines = projectorWindow.getLines();
         int currentIndex = projectorWindow.getCurrentIndex();
         StringBuilder previewText = new StringBuilder();
+
+        final String BG_COLOR = "#0F0F0F"; // Background
+        final String FG_COLOR = "#131313"; // Foreground
+        final String CL_COLOR = "#3E3E3E"; // Current line
     
         // Build the preview text formatted as HTML
-        previewText.append("<html><body style='font-family:monospace; color:white; background-color:#0F0F0F;'>");
-    
+        previewText.append("<html><body style='font-family:monospace; color:white; background-color:").append(BG_COLOR).append(";'>");
+        if (lines.isEmpty()) {
+            previewText.append("<center>")
+                .append("<div data-line='").append("0")
+                .append("' style='background-color:").append(CL_COLOR).append(";'><b>")
+                .append("Choose a file to display")
+                .append("</b></div></center>");
+        }
         for (int i = 0; i < lines.size(); i++) {
             String line = lines.get(i);
             String[] splitLine = line.split("<br>");
     
             for (String split : splitLine) {
-                String backgroundColor = (i % 2 == 0) ? "#0F0F0F" : "#131313";
+                String backgroundColor = (i % 2 == 0) ? BG_COLOR : FG_COLOR;
                 if (i == currentIndex) {
                     previewText.append("<div data-line='").append(i)
-                        .append("' style='background-color:#3E3E3E;'><b>")
+                        .append("' style='background-color:").append(CL_COLOR).append(";'><b>")
                         .append(">>&nbsp;").append(split)
                         .append("</b></div>");
                 } else {
