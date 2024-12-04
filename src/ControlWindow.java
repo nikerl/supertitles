@@ -162,7 +162,17 @@ class ControlWindow extends JFrame {
         addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
-                projectorWindow.dispatchEvent(e);
+                if (isLocked) {
+                    if (e.getKeyCode() == KeyEvent.VK_DOWN || e.getKeyCode() == KeyEvent.VK_S) {
+                        projectorWindow.nextLine();
+                    } else if (e.getKeyCode() == KeyEvent.VK_UP || e.getKeyCode() == KeyEvent.VK_W) {
+                        projectorWindow.previousLine();
+                    } else {
+                        return; // Ignore other keys
+                    }
+                } else {
+                    projectorWindow.dispatchEvent(e);
+                }
                 updatePreview();
             }
         });

@@ -176,9 +176,11 @@ class ProjectorWindow extends JFrame {
                 if (e.isControlDown()) {
                     if (e.isShiftDown()) {
                         switch (e.getKeyCode()) {
+                            case KeyEvent.VK_A:
                             case KeyEvent.VK_LEFT:
                                 move_textbox(Direction.ROTATE_LEFT);
                                 break;
+                            case KeyEvent.VK_D:
                             case KeyEvent.VK_RIGHT:
                                 move_textbox(Direction.ROTATE_RIGHT);
                                 break;
@@ -187,15 +189,19 @@ class ProjectorWindow extends JFrame {
                         }
                     } else {
                         switch (e.getKeyCode()) {
+                            case KeyEvent.VK_W:
                             case KeyEvent.VK_UP:
                                 move_textbox(Direction.TRANSLATE_UP);
                                 break;
+                            case KeyEvent.VK_S:
                             case KeyEvent.VK_DOWN:
                                 move_textbox(Direction.TRANSLATE_DOWN);
                                 break;
+                            case KeyEvent.VK_A:
                             case KeyEvent.VK_LEFT:
                                 move_textbox(Direction.TRANSLATE_LEFT);
                                 break;
+                            case KeyEvent.VK_D:
                             case KeyEvent.VK_RIGHT:
                                 move_textbox(Direction.TRANSLATE_RIGHT);
                                 break;
@@ -212,9 +218,11 @@ class ProjectorWindow extends JFrame {
                     updateTitle();
                 } else {
                     switch (e.getKeyCode()) {
+                        case KeyEvent.VK_W:
                         case KeyEvent.VK_UP:
                             previousLine();
                             break;
+                        case KeyEvent.VK_S:
                         case KeyEvent.VK_DOWN:
                             nextLine();
                             break;
