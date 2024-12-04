@@ -12,6 +12,7 @@ class ControlWindow extends JFrame {
     private ProjectorWindow projectorWindow;
     private String lastUsedPath;
     private JTextPane previewArea;
+    private boolean isFirstFile = true;
 
     public ControlWindow(ProjectorWindow projectorWindow) {
         this.projectorWindow = projectorWindow;
@@ -211,6 +212,13 @@ class ControlWindow extends JFrame {
             prefs.put("lastUsedPath", lastUsedPath);
     
             updatePreview();
+
+            // Attempt to fix preview area text jumping round on first file
+            if (isFirstFile) {
+                projectorWindow.loadLines(filePath);
+                updatePreview();
+                isFirstFile = false;
+            }
         }
     
         // Re-enable always-on-top for the control window
