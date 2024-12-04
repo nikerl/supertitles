@@ -42,10 +42,10 @@ To move the text on the projector screen and cue the next line you can use the f
 
 |Shortcut|Description|
 |---|---|
-|Down arrow|Cue the next line|
-|Up arrow|Cue the previous line|
-|CTRL + Arrow keys|Move the text around on the screen|
-|CTRL + SHIFT + Left/Right arrow keys|Rotate the text on the screen|
+|Down arrow (S)|Cue the next line|
+|Up arrow (W)|Cue the previous line|
+|CTRL + Arrow keys (CTRL + WASD)|Move the text around on the screen|
+|CTRL + SHIFT + Left/Right arrow keys (CTRL + SHIFT + A/D)|Rotate the text on the screen|
 
 ### Dependencies
 Java 9, or later
