@@ -1,5 +1,6 @@
 package src;
 import javax.swing.*;
+import javax.swing.event.HyperlinkEvent;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.*;
 import java.awt.*;
@@ -106,17 +107,46 @@ class ControlWindow extends JFrame {
         });
         topPanel.add(lockButton);
 
-
         // Add help button
         JButton helpButton = new JButton("?");
         helpButton.setPreferredSize(new Dimension(40, helpButton.getPreferredSize().height));
         helpButton.addActionListener(e -> {
-            String message = "Keyboard Shortcuts:\n\n" +
-                             "Next Line: Down arrow\n" +
-                             "Previous Line: Up arrow\n" +
-                             "Move text: CTRL + Arrow keys\n" +
-                             "Rotate text: CTRL + SHIFT + Left/Right arrow";
-            JOptionPane.showMessageDialog(this, message, "Help", JOptionPane.INFORMATION_MESSAGE);
+            String message = 
+                "<html>" +
+                    "<div style='margin-right: 20px; margin-top: 0; margin-left: 0px; font-size: 11px;'>" +
+                        "<h2 style='margin-bottom: 0px;'>Keyboard Shortcuts:</h2>" +
+                        "<ul style='margin-left: 0; padding-left: 10px;'>" +
+                            "<li><b>Next Line:</b> Down arrow (S)</li>" +
+                            "<li><b>Previous Line:</b> Up arrow (W)</li>" +
+                            "<li><b>Move text:</b> CTRL + Arrow keys (CTRL + WASD)</li>" +
+                            "<li><b>Rotate text:</b> CTRL + SHIFT + Left/Right arrow (CTRL + SHIFT + A/D)</li>" +
+                        "</ul>" +
+                        "<h2 style='margin-bottom: 0px;'>Buttons:</h2>" +
+                        "<ul style='margin-left: 0; padding-left: 10px;'>" +
+                            "<li><b>Lock / Unlock:</b> Disables or Enables modifying the projected text</li>" +
+                        "</ul>" +
+                        "<h2 style='margin-bottom: 0px;'>About SuperTitles:</h2>" +
+                        "Star on GitHub! " +
+                        "<a href='https://github.com/nikerl/supertitles/' style='color:#29B6F6'>https://github.com/nikerl/supertitles/</a>" +
+                        "<br>" +
+                        "Licence: GPL-3.0" +
+                    "</div>" +
+                "</html>";
+        
+            JEditorPane editorPane = new JEditorPane("text/html", message);
+            editorPane.setEditable(false);
+            editorPane.setOpaque(false);
+            editorPane.addHyperlinkListener(event -> {
+                if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+                    try {
+                        Desktop.getDesktop().browse(event.getURL().toURI());
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            });
+        
+            JOptionPane.showMessageDialog(this, editorPane, "Help", JOptionPane.INFORMATION_MESSAGE);
         });
         topPanel.add(helpButton);
     
