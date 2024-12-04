@@ -13,6 +13,7 @@ class ControlWindow extends JFrame {
     private String lastUsedPath;
     private JTextPane previewArea;
     private boolean isFirstFile = true;
+    private boolean isLocked = false; // Add this field
 
     public ControlWindow(ProjectorWindow projectorWindow) {
         this.projectorWindow = projectorWindow;
@@ -92,6 +93,19 @@ class ControlWindow extends JFrame {
             requestFocusInWindow();
         });
         topPanel.add(fontStyleComboBox);
+
+        // Add lock button
+        JButton lockButton = new JButton("Lock");
+        lockButton.setPreferredSize(new Dimension(100, lockButton.getPreferredSize().height));
+        lockButton.addActionListener(e -> {
+            isLocked = !isLocked;
+            lockButton.setText(isLocked ? "Unlock" : "Lock");
+            fontComboBox.setEnabled(!isLocked);
+            fontStyleComboBox.setEnabled(!isLocked);
+            requestFocusInWindow();
+        });
+        topPanel.add(lockButton);
+
 
         // Add help button
         JButton helpButton = new JButton("?");
