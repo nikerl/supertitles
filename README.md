@@ -1,6 +1,5 @@
 # SuperTitles
-**A better supertitling / surtitling program**
-
+### A better supertitling / surtitling program
 This is a simple program which easily allows you to project song lyrics line by line. Perfect for subtitling a live performance.
 
 ### Features
