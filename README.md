@@ -9,7 +9,7 @@ This is a simple program which easily allows you to project song lyrics line by 
   - Increase and decrease the font size
 - A preview window that displays the full text file, while keeping the current line in the center of the screen
 - Easy font selection
-- Eaily change between Plain / Bold / Italic
+- Easily change between Plain / Bold / Italic
 - Lock the projected text to prevent accidentally moving things around
 - Dark mode
 
