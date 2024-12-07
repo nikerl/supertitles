@@ -107,6 +107,23 @@ class ControlWindow extends JFrame {
         });
         topPanel.add(lockButton);
 
+                // Add save config button
+        JButton saveConfigButton = new JButton("Save Config");
+        saveConfigButton.setPreferredSize(new Dimension(150, saveConfigButton.getPreferredSize().height));
+        saveConfigButton.addActionListener(e -> {
+            saveConfig();
+        });
+        topPanel.add(saveConfigButton);
+        
+        // Add load config button
+        JButton loadConfigButton = new JButton("Load Config");
+        loadConfigButton.setPreferredSize(new Dimension(150, loadConfigButton.getPreferredSize().height));
+        loadConfigButton.addActionListener(e -> {
+            loadConfig();
+        });
+        topPanel.add(loadConfigButton);
+        
+        
         // Add help button
         JButton helpButton = new JButton("?");
         helpButton.setPreferredSize(new Dimension(40, helpButton.getPreferredSize().height));
@@ -350,4 +367,61 @@ class ControlWindow extends JFrame {
         updatePreview();
         projectorWindow.updateTitle();
     }
+
+    private void saveConfig() {
+        try {
+            File configFile = new File(lastUsedPath, "config.txt");
+            BufferedWriter writer = new BufferedWriter(new FileWriter(configFile));
+            writer.write("coordsX=" + projectorWindow.getCoords().x + "\n");
+            writer.write("coordsY=" + projectorWindow.getCoords().y + "\n");
+            writer.write("coordsRotation=" + projectorWindow.getCoords().rotation + "\n");
+            writer.write("fontSize=" + projectorWindow.getFontSize() + "\n");
+            writer.close();
+            JOptionPane.showMessageDialog(this, "Configuration saved successfully.", "Save Config", JOptionPane.INFORMATION_MESSAGE);
+        } catch (IOException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Failed to save configuration.", "Save Config", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    private void loadConfig() {
+        try {
+            File configFile = new File(lastUsedPath, "config.txt");
+            if (configFile.exists()) {
+                BufferedReader reader = new BufferedReader(new FileReader(configFile));
+                String line;
+                int x = 0, y = 0;
+                double rotation = 0.0;
+                while ((line = reader.readLine()) != null) {
+                    String[] parts = line.split("=");
+                    if (parts.length == 2) {
+                        switch (parts[0]) {
+                            case "coordsX":
+                                x = Integer.parseInt(parts[1]);
+                                break;
+                            case "coordsY":
+                                y = Integer.parseInt(parts[1]);
+                                break;
+                            case "coordsRotation":
+                                rotation = Double.parseDouble(parts[1]);
+                                break;
+                            case "fontSize":
+                                projectorWindow.setFontSize(Integer.parseInt(parts[1]));
+                                break;
+                        }
+                    }
+                }
+                reader.close();
+                projectorWindow.setCoords(x, y, rotation);
+                projectorWindow.updateTitle();
+                JOptionPane.showMessageDialog(this, "Configuration loaded successfully.", "Load Config", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this, "No configuration file found.", "Load Config", JOptionPane.WARNING_MESSAGE);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Failed to load configuration.", "Load Config", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
 }

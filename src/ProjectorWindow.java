@@ -251,4 +251,18 @@ class ProjectorWindow extends JFrame {
         ProjectorWindow.fontStyle = fontStyle;
         updateTitle();
     }
+    public Coords getCoords() {
+        return coords;
+    }
+    public int getFontSize() {
+        return fontSize;
+    }
+    public void setCoords(int x, int y, double rotation) {
+        this.coords.x = x;
+        this.coords.y = y;
+        this.coords.rotation = rotation;
+    }
+    public void setFontSize(int fontSize) {
+        ProjectorWindow.fontSize = fontSize;
+    }
 }
