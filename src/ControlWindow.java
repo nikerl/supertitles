@@ -13,6 +13,9 @@ class ControlWindow extends JFrame {
     private ProjectorWindow projectorWindow;
     private String lastUsedPath;
     private JTextPane previewArea;
+    private JComboBox<String> fontComboBox;
+    private JComboBox<String> fontStyleComboBox;
+    private JButton lockButton;
     private boolean isFirstFile = true;
     private boolean isLocked = false; // Add this field
 
@@ -20,17 +23,7 @@ class ControlWindow extends JFrame {
         this.projectorWindow = projectorWindow;
 
         // Determine the directory of the JAR file
-        try {
-            File jarFile = new File(ControlWindow.class.getProtectionDomain().getCodeSource().getLocation().toURI());
-            lastUsedPath = jarFile.getParent();
-
-            // Sets lastUsedPath to CWD instead of internal VSCode dir
-            if (lastUsedPath.contains(".config/Code")) {
-                lastUsedPath = System.getProperty("user.dir");
-            }
-        } catch (Exception e) {
-            lastUsedPath = System.getProperty("user.dir");
-        }
+        lastUsedPath = getRootDir();
     
         // Set up the JFrame
         setTitle("SuperTitles");
@@ -48,66 +41,7 @@ class ControlWindow extends JFrame {
         });
         topPanel.add(chooseFileButton);
     
-        // Add control buttons
-        JButton nextButton = new JButton("Next");
-        nextButton.setPreferredSize(new Dimension(100, nextButton.getPreferredSize().height));
-        nextButton.addActionListener(e -> {
-            projectorWindow.nextLine();
-            updatePreview();
-            requestFocusInWindow();
-        });
-        topPanel.add(nextButton);
-    
-        JButton previousButton = new JButton("Previous");
-        previousButton.setPreferredSize(new Dimension(100, previousButton.getPreferredSize().height));
-        previousButton.addActionListener(e -> {
-            projectorWindow.previousLine();
-            updatePreview();
-            requestFocusInWindow();
-        });
-        topPanel.add(previousButton);
-
-        // Add font selection dropdown
-        String[] fonts = {"Arial", "Monospaced", "Serif"};
-        JComboBox<String> fontComboBox = new JComboBox<>(fonts);
-        fontComboBox.setSelectedItem("Serif");
-        fontComboBox.setPreferredSize(new Dimension(150, fontComboBox.getPreferredSize().height));
-        fontComboBox.addActionListener(e -> {
-            String selectedFont = (String) fontComboBox.getSelectedItem();
-            projectorWindow.setFontTypeFace(selectedFont);
-            requestFocusInWindow();
-        });
-        topPanel.add(fontComboBox);
-
-        // Add font style selection dropdown
-        String[] fontStyles = {"Plain", "Bold", "Italic"};
-        JComboBox<String> fontStyleComboBox = new JComboBox<>(fontStyles);
-        fontStyleComboBox.setSelectedItem("Plain");
-        fontStyleComboBox.setPreferredSize(new Dimension(150, fontStyleComboBox.getPreferredSize().height));
-        fontStyleComboBox.addActionListener(e -> {
-            String selectedFontStyle = (String) fontStyleComboBox.getSelectedItem();
-            int fontStyle = 0;
-            if (selectedFontStyle.equals("Plain")) fontStyle = Font.PLAIN;
-            if (selectedFontStyle.equals("Bold")) fontStyle = Font.BOLD;
-            if (selectedFontStyle.equals("Italic")) fontStyle = Font.ITALIC;
-            projectorWindow.setFontStyle(fontStyle);
-            requestFocusInWindow();
-        });
-        topPanel.add(fontStyleComboBox);
-
-        // Add lock button
-        JButton lockButton = new JButton("Lock");
-        lockButton.setPreferredSize(new Dimension(100, lockButton.getPreferredSize().height));
-        lockButton.addActionListener(e -> {
-            isLocked = !isLocked;
-            lockButton.setText(isLocked ? "Unlock" : "Lock");
-            fontComboBox.setEnabled(!isLocked);
-            fontStyleComboBox.setEnabled(!isLocked);
-            requestFocusInWindow();
-        });
-        topPanel.add(lockButton);
-
-                // Add save config button
+        // Add save config button
         JButton saveConfigButton = new JButton("Save Config");
         saveConfigButton.setPreferredSize(new Dimension(150, saveConfigButton.getPreferredSize().height));
         saveConfigButton.addActionListener(e -> {
@@ -123,6 +57,44 @@ class ControlWindow extends JFrame {
         });
         topPanel.add(loadConfigButton);
         
+
+        // Add font selection dropdown
+        String[] fonts = {"Arial", "Monospaced", "Serif"};
+        fontComboBox = new JComboBox<>(fonts);
+        fontComboBox.setSelectedItem("Serif");
+        fontComboBox.setPreferredSize(new Dimension(150, fontComboBox.getPreferredSize().height));
+        fontComboBox.addActionListener(e -> {
+            String selectedFont = (String) fontComboBox.getSelectedItem();
+            projectorWindow.setFontTypeFace(selectedFont);
+            requestFocusInWindow();
+        });
+        topPanel.add(fontComboBox);
+
+        // Add font style selection dropdown
+        String[] fontStyles = {"Plain", "Bold", "Italic"};
+        fontStyleComboBox = new JComboBox<>(fontStyles);
+        fontStyleComboBox.setSelectedItem("Plain");
+        fontStyleComboBox.setPreferredSize(new Dimension(150, fontStyleComboBox.getPreferredSize().height));
+        fontStyleComboBox.addActionListener(e -> {
+            String selectedFontStyle = (String) fontStyleComboBox.getSelectedItem();
+            int fontStyle = 0;
+            if (selectedFontStyle.equals("Plain")) fontStyle = Font.PLAIN;
+            if (selectedFontStyle.equals("Bold")) fontStyle = Font.BOLD;
+            if (selectedFontStyle.equals("Italic")) fontStyle = Font.ITALIC;
+            projectorWindow.setFontStyle(fontStyle);
+            requestFocusInWindow();
+        });
+        topPanel.add(fontStyleComboBox);
+
+        // Add lock button
+        lockButton = new JButton("Lock");
+        lockButton.setPreferredSize(new Dimension(100, lockButton.getPreferredSize().height));
+        lockButton.addActionListener(e -> {
+            isLocked = !isLocked;
+            setLockButton(isLocked);
+            requestFocusInWindow();
+        });
+        topPanel.add(lockButton);
         
         // Add help button
         JButton helpButton = new JButton("?");
@@ -368,14 +340,23 @@ class ControlWindow extends JFrame {
         projectorWindow.updateTitle();
     }
 
+    private void setLockButton(Boolean isLocked) {
+        lockButton.setText(isLocked ? "Unlock" : "Lock");
+        fontComboBox.setEnabled(!isLocked);
+        fontStyleComboBox.setEnabled(!isLocked);
+    }
+
     private void saveConfig() {
         try {
-            File configFile = new File(lastUsedPath, "config.txt");
+            File configFile = new File(getRootDir(), ".supertitles_config.txt");
             BufferedWriter writer = new BufferedWriter(new FileWriter(configFile));
             writer.write("coordsX=" + projectorWindow.getCoords().x + "\n");
             writer.write("coordsY=" + projectorWindow.getCoords().y + "\n");
             writer.write("coordsRotation=" + projectorWindow.getCoords().rotation + "\n");
             writer.write("fontSize=" + projectorWindow.getFontSize() + "\n");
+            writer.write("fontFace=" + projectorWindow.getFontTypeFace() + "\n");
+            writer.write("fontStyle=" + projectorWindow.getFontStyle() + "\n");
+            writer.write("locked=" + isLocked + "\n");
             writer.close();
             JOptionPane.showMessageDialog(this, "Configuration saved successfully.", "Save Config", JOptionPane.INFORMATION_MESSAGE);
         } catch (IOException e) {
@@ -386,7 +367,7 @@ class ControlWindow extends JFrame {
     
     private void loadConfig() {
         try {
-            File configFile = new File(lastUsedPath, "config.txt");
+            File configFile = new File(getRootDir(), ".supertitles_config.txt");
             if (configFile.exists()) {
                 BufferedReader reader = new BufferedReader(new FileReader(configFile));
                 String line;
@@ -408,6 +389,23 @@ class ControlWindow extends JFrame {
                             case "fontSize":
                                 projectorWindow.setFontSize(Integer.parseInt(parts[1]));
                                 break;
+                            case "fontFace":
+                                projectorWindow.setFontTypeFace(parts[1]);
+                                fontComboBox.setSelectedItem(parts[1]);
+                                break;
+                            case "fontStyle":
+                                int fontStyle = Integer.parseInt(parts[1]);
+                                String parsedStyle = "";
+                                projectorWindow.setFontStyle(fontStyle);
+                                if (fontStyle == Font.PLAIN) parsedStyle = "Plain";
+                                if (fontStyle == Font.BOLD) parsedStyle = "Bold";
+                                if (fontStyle == Font.ITALIC) parsedStyle = "Italic";
+                                fontStyleComboBox.setSelectedItem(parsedStyle);
+                                break;
+                            case "locked":
+                                isLocked = Boolean.parseBoolean(parts[1]);
+                                setLockButton(isLocked);
+                                break;
                         }
                     }
                 }
@@ -424,4 +422,19 @@ class ControlWindow extends JFrame {
         }
     }
 
+    String getRootDir() {
+        String path;
+        try {
+            File jarFile = new File(ControlWindow.class.getProtectionDomain().getCodeSource().getLocation().toURI());
+            path = jarFile.getParent();
+
+            // Sets path to CWD instead of internal VSCode dir
+            if (path.contains(".config/Code")) {
+                path = System.getProperty("user.dir");
+            }
+        } catch (Exception e) {
+            path = System.getProperty("user.dir");
+        }
+        return path;
+    }
 }

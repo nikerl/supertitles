@@ -28,3 +28,6 @@ replay_pid*
 
 # Vscode stuff
 /.vscode
+
+# Config file
+.supertitles_config.txt

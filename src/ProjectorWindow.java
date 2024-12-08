@@ -243,9 +243,15 @@ class ProjectorWindow extends JFrame {
     public void setCurrentIndex(int newIndex) {
         currentIndex = newIndex;
     }
+    public String getFontTypeFace() {
+        return fontTypeFace;
+    }
     public void setFontTypeFace(String fontTypeFace) {
         ProjectorWindow.fontTypeFace = fontTypeFace;
         updateTitle();
+    }
+    public int getFontStyle() {
+        return fontStyle;
     }
     public void setFontStyle(int fontStyle) {
         ProjectorWindow.fontStyle = fontStyle;
@@ -254,13 +260,13 @@ class ProjectorWindow extends JFrame {
     public Coords getCoords() {
         return coords;
     }
-    public int getFontSize() {
-        return fontSize;
-    }
     public void setCoords(int x, int y, double rotation) {
         this.coords.x = x;
         this.coords.y = y;
         this.coords.rotation = rotation;
+    }
+    public int getFontSize() {
+        return fontSize;
     }
     public void setFontSize(int fontSize) {
         ProjectorWindow.fontSize = fontSize;
