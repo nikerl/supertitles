@@ -11,6 +11,7 @@ This is a simple program which easily allows you to project song lyrics line by 
 - Easy font selection
 - Easily change between Plain / Bold / Italic
 - Lock the projected text to prevent accidentally moving things around
+- Save current text config to file (Only useful if the projector resolution stays the same)
 - Dark mode
 
 ### Compile and run
@@ -45,6 +46,8 @@ To move the text on the projector screen and cue the next line you can use the f
 |Up arrow (W)|Cue the previous line|
 |CTRL + Arrow keys (CTRL + WASD)|Move the text around on the screen|
 |CTRL + SHIFT + Left/Right arrow keys (CTRL + SHIFT + A/D)|Rotate the text on the screen|
+
+The save config button saves the current text configuration to the file `.supertitles_config.cfg`. This includes the text posision, rotation, font face, font style, font size, as well as if the config is locked or not. The load config button loads a previously saved config if available.
 
 ### Dependencies
 Java 9, or later
