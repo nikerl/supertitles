@@ -348,7 +348,7 @@ class ControlWindow extends JFrame {
 
     private void saveConfig() {
         try {
-            File configFile = new File(getRootDir(), ".supertitles_config.txt");
+            File configFile = new File(getRootDir(), ".supertitles_config.cfg");
             BufferedWriter writer = new BufferedWriter(new FileWriter(configFile));
             writer.write("coordsX=" + projectorWindow.getCoords().x + "\n");
             writer.write("coordsY=" + projectorWindow.getCoords().y + "\n");
@@ -367,7 +367,7 @@ class ControlWindow extends JFrame {
     
     private void loadConfig() {
         try {
-            File configFile = new File(getRootDir(), ".supertitles_config.txt");
+            File configFile = new File(getRootDir(), ".supertitles_config.cfg");
             if (configFile.exists()) {
                 BufferedReader reader = new BufferedReader(new FileReader(configFile));
                 String line;
