@@ -104,9 +104,8 @@ class ProjectorWindow extends JFrame {
         title.setHorizontalAlignment(JLabel.CENTER); // Center align the text
         title.setVerticalAlignment(JLabel.CENTER);
 
-        // Set the size of the JLabel to be larger to accommodate rotation
         int width = getWidth();
-        int height = 400; // Increase height to accommodate rotation
+        int height = getSize().height; // Set height to window size
         title.setSize(width, height);
 
         // Adjust the location based on the coords
