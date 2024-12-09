@@ -153,7 +153,7 @@ class ControlWindow extends JFrame {
 
         JScrollPane scrollPane = new JScrollPane(previewArea);
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
-        scrollPane.setPreferredSize(new Dimension(600, 0)); // Set preferred width
+        scrollPane.setPreferredSize(new Dimension(800, 0)); // Set preferred width
         
         // Center the scrollPane in a panel using GridBagLayout
         JPanel centerPanel = new JPanel(new GridBagLayout());
