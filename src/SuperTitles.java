@@ -13,7 +13,7 @@ public class SuperTitles {
         }
     
         SwingUtilities.invokeLater(() -> {
-            ProjectorWindow projectorWindow = new ProjectorWindow(null);
+            ProjectorWindow projectorWindow = new ProjectorWindow();
             new ControlWindow(projectorWindow);
         });
     }

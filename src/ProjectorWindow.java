@@ -29,7 +29,7 @@ class ProjectorWindow extends JFrame {
         ROTATE_RIGHT
     }
 
-    public ProjectorWindow(String filePath) {
+    public ProjectorWindow() {
         lines = new ArrayList<>();
         currentIndex = 0;
         fontTypeFace = "Serif";
@@ -48,9 +48,6 @@ class ProjectorWindow extends JFrame {
         title = new RotatableLabel("", JLabel.CENTER);
         title.setForeground(Color.WHITE);
         add(title);
-    
-        // Load lines from the text file
-        loadLines(filePath);
     
         // Add key listener for navigation and font changes
         keylistener();
