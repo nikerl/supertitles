@@ -102,7 +102,7 @@ class ControlWindow extends JFrame {
         helpButton.addActionListener(e -> {
             String message = 
                 "<html>" +
-                    "<div style='margin-right: 20px; margin-top: 0; margin-left: 0px; font-size: 11px;'>" +
+                    "<div style='margin-right: 20px; margin-top: 0; margin-left: 0px; font-size: 11px; font: arial'>" +
                         "<h2 style='margin-bottom: 0px;'>Keyboard Shortcuts:</h2>" +
                         "<ul style='margin-left: 0; padding-left: 10px;'>" +
                             "<li><b>Next Line:</b> Down arrow (S)</li>" +
