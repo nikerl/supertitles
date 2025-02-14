@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SuperTitles</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="icon" href="/images/favicon.png" type="image/x-icon">
+</head>
+<body>
+    <div class="curtain" id="curtain">
+        <div class="left-curtain"> 
+            <img src="/images/curtain/left.jpg" alt="Left Curtain">
+        </div>
+        <div class="right-curtain">
+            <img src="/images/curtain/right.jpg" alt="Right Curtain">
+        </div>
+    </div>
+
+    <div class="titlepage" id="titlepage">
+        <p style="font-family: 'Times New Roman', Times, serif; margin: 0;">SuperTitles</p>
+
+        <div class="content">
+            <h1>About</h1>
+            <hr>
+            <p>
+                SuperTitles is the perfect tool for subtitling a live performance, such a theater or a concert. An easty to use supertitling / surtitling program.
+            </p>
+            <p>
+                I needed a flexible program that could display subtitles during a theater performance for 
+                <a href="https://www.chalmersspexet.se">Chalmersspexet</a> but none of the programs i found worked well, so I made "SuperTitles". 
+                It's a simple java app which allows you to:
+            </p>
+            <ul>
+                <li>Easily reposition and rotate the projected text to fit a non permanent projector screen.</li>
+                <li>Lock the projected text to prevent accidentally moving things around</li>
+                <li>Change the font face and style</li>
+                <li>Save and load configs to/from file</li>
+                <li>See a preview of the full lyrics</li>
+            </ul>
+            <p>
+                The program is open source and distributed under the GPL-3.0 licence.
+            </p>
+            <center>
+                <div class="button-container">
+                   <a class="button" target="_blank" href="https://github.com/nikerl/supertitles" style="color: white; text-decoration: none;">
+                        <span>Fork or star on Github&nbsp;&nbsp;</span>
+                        <img src="/images/github.svg" alt="github" style="height: 20px; pointer-events: none">
+                    </a>
+                </div>
+            </center>
+            
+
+            <h1>Download</h1>
+            <hr>
+            <p>
+            For windows download and run the EXE, for other platforms download the JAR. Java is needed to run the program.
+            </p>
+            <center>
+                <div class="button-container">
+                    <a class="button" href='https://github.com/nikerl/supertitles/releases/latest/download/SuperTitles-win.exe' style="color: white; text-decoration: none;">Windows EXE</a>
+                    <a class="button" href='https://github.com/nikerl/supertitles/releases/latest/download/SuperTitles-any.jar' style="color: white; text-decoration: none;">All Platforms JAR</a>
+                </div>
+            </center>
+
+            <h1>Usage</h1>
+            <hr>
+            <p>
+                The program takes UTF-8 text files. If multiple lines should be shown on one frame, such as if two people are singing over each other, 
+                these should be on the same line in the file but separated by a &lt;br&gt; tag. For example: Hello there!&lt;br&gt;General kenobi!
+            </p>
+            <p>
+                To move the text on the projector screen and cue the next line you can use the following keyboard shortcuts:
+            </p>
+            <center>
+                <table id="shortcuts">
+                    <tr>
+                        <td>Shortcut</td>
+                        <td>Description</td>
+                    </tr>
+                    <tr>
+                        <td>Down arrow (S)</td>
+                        <td>Cue the next line</td>
+                    </tr>
+                    <tr>
+                        <td>Up arrow (W)</td>
+                        <td>Cue the previous line</td>
+                    </tr>
+                    <tr>
+                        <td>CTRL + Arrow keys (CTRL + WASD)</td>
+                        <td>Move the text around on the screen</td>
+                    </tr>
+                    <tr>
+                        <td>CTRL + SHIFT + Left/Right arrow keys (CTRL + SHIFT + A/D)</td>
+                        <td>Rotate the text on the screen</td>
+                    </tr>
+                </table>
+            </center>
+            <p>The save config button saves the current text configuration to the file .supertitles_config.cfg. This includes the text posision, 
+                rotation, font face, font style, font size, as well as if the config is locked or not. The load config button loads a previously 
+                saved config if available.</p>
+        </div>
+    </div>
+    <script src="/script.js"></script>
+</body>
+</html>
