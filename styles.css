@@ -105,11 +105,16 @@ a:hover {
     opacity: 1;
 }
 
+.footer {
+    position: fixed;
+    bottom: 0;
+}
+
 
 /* Link box */
 .button-container {
     display: flex;
-    width: 95%;
+    width: 800pt;
 }
 .button {
     flex: 1;
@@ -169,6 +174,15 @@ a:hover {
     .button-container {
         flex-direction: column;
         width: 100%;
+    }
+
+    .footer {
+        width: 100%;
+        position: relative;
+    }
+
+    .footer .button-container {
+        flex-direction: row;
     }
 
     @keyframes moveUp {
