@@ -199,7 +199,7 @@ class ControlWindow extends JFrame {
         previewArea.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                int offset = previewArea.viewToModel2D(e.getPoint());
+                int offset = previewArea.viewToModel(e.getPoint());
                 try {
                     Element element = previewArea.getStyledDocument().getCharacterElement(offset);
                     AttributeSet as = element.getAttributes();
