@@ -14,7 +14,15 @@ This is a simple program which easily allows you to project song lyrics line by 
 - Save current text config to file (Only useful if the projector resolution stays the same)
 - Dark mode
 
+### Screenshots
+#### Control Window
+<img width="900" alt="Control-Window" src="https://github.com/user-attachments/assets/ebe542f0-9740-4ce3-bbc1-f45dcb94cb27" />
+
+#### Projector Window
+<img width="900" alt="Projector-Window" src="https://github.com/user-attachments/assets/2439b3e9-e4b1-48a4-90f8-2a53415b1327" />
+
 ### Usage
+
 The program takes UTF-8 text files. If multiple lines should be shown on one frame, such as if two people are singing over each other, these should be on the same line in the file but separated by a `<br>` tag. For example: `Hello there!<br>General kenobi!`
 
 To move the text on the projector screen and cue the next line you can use the following keyboard shortcuts:
@@ -50,4 +58,4 @@ java -jar SuperTitles.jar
 ```
 
 ### Dependencies
-Java JDK 9, or later
+Java 8, or later
